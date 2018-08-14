@@ -14,14 +14,14 @@ const Navigation = () => (
     <div className="collapse navbar-collapse">
       <ul className="navbar-nav mr-auto">
         <li className="nav-item text-center mb-1 mt-1">
-          <a className="nav-link" href="#">
+          <a className="nav-link" href="/">
             <i className="fa fa-home fa-2x blue-font "></i>
             <br/>
             <i className="nav-text">Home</i>
           </a>
         </li>
         <li className="nav-item text-center mb-1 mt-1">
-          <a className="nav-link" href="#">
+          <a className="nav-link" href="/user">
             <i className="fa fa-user fa-2x red-font"></i>
             <br/>
             <i className="nav-text">Users</i>
