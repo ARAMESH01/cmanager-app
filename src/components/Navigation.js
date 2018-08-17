@@ -1,4 +1,5 @@
-import React from 'react'
+import React from 'react';
+import Home from './Home';
 
 const Navigation = () => (
   <nav className="navbar navbar-expand-md bg-light sticky-top col-md-12">
@@ -21,7 +22,7 @@ const Navigation = () => (
           </a>
         </li>
         <li className="nav-item text-center mb-1 mt-1">
-          <a className="nav-link" href="/user">
+          <a className="nav-link" href="/">
             <i className="fa fa-user fa-2x red-font"></i>
             <br/>
             <i className="nav-text">Users</i>

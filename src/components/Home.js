@@ -1,41 +1,33 @@
 import React, { Component } from "react";
-import axios from 'axios';
-// import "./Home.css";
-import { createStore, combineReducers } from 'redux';
-import reducers from '../reducers'
-const store = createStore(reducers,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+import { connect } from 'react-redux';
+import User from './User';
+import Edit from './Edit';
+import { editUser } from '../actions';
+import { Link } from "react-router-dom";
 
-export default class Home extends Component {
-  constructor(props) {
-    super(props);
-    // this.state = {users: []};
-  }
-  store.subscribe(render);
+const mapStateToProps = ({users}) => ({
+  users
+});
 
-  componentDidMount() {
-    axios.get('https://enbx9hfr33.execute-api.us-east-2.amazonaws.com/dev/users', {
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      crossDomain: true
-    })
-    .then((result) => {
-      console.dir(result);
-      let action = {type: 'FETCH_DATA', users: result.data};
-      store.dispatch(action);
-      // this.setState({users: result.data});
-    });
+const mapDispatchToProps = () => {
+  return editUser;
+};
+
+class Home extends Component {
+  onUserClick = (user) => {
+    this.props.editUser(user);
   }
 
   renderUsers() {
-    // const users = this.state.users;
-     const users = store.getState();
+    const users = this.props.users;
     return users.map((user, index) => {
       return (
-        <tr key={index}>
-          <th scope='row'><i className="fas fa-eye"></i><a><i className="fas fa-edit"></i></a></th>
+        <tr key={index} class="text-left">
+          <th scope='row'>
+            {/* <Link to="/edit" onClick={this.onUserClick(user)}><i className="fas fa-edit text-danger" ></i></Link> */}
+            <a className="btn" href="/user"><i className="fas fa-eye text-success"></i></a>
+            <a className="btn" href="/edit"><i className="fas fa-edit text-danger" onClick={this.onUserClick(user)}></i></a>
+          </th>
           <td>{user.USER_ID}</td>
           <td>{user.USER_CD}</td>
           {/* <td>{user.USER_CODE}</td> */}
@@ -56,13 +48,13 @@ export default class Home extends Component {
           <div className='col-sm'>
             <table className="table">
               <thead className="bg-dark text-white mt-1">
-                <tr>
+                <tr class="text-left">
                   {/* <th scope="col">Action</th> */}
                   {/*
                   <button className="btn fa fa-plus" type="submit"></button> */}
-                  <th scope='col' className='text-nowrap'>Action&nbsp;<a className="btn" href="#">
+                  <th scope='col' className='text-nowrap'>Action&nbsp;<a className="btn" href="/User">
                   {/* <br/> */}
-                  <i className="fas fa-plus-circle fa-fw yellow-font"></i></a></th>
+                  <i className="fas fa-plus-circle fa-fw yellow-font text-warning"></i></a></th>
                   <th scope="col">#</th>
                   <th scope="col">Code</th>
                   <th scope="col">First Name</th>
@@ -84,4 +76,6 @@ export default class Home extends Component {
     );
 
   }
-}
+};
+
+export default connect(mapStateToProps, {editUser})(Home);

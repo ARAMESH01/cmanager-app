@@ -1,9 +1,22 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-class User extends Component {
+class NewUser extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      userId: "",
+      userCode: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      role: "",
+      password: "",
+      reEnterPassword: ""
+    };
+
+    this.handleInputChange = this.handleInputChange.bind(this);
   }
 
   handleInputChange = (event) => {
@@ -18,8 +31,31 @@ class User extends Component {
 
   onSubmit = (event) => {
     event.preventDefault();
-    
+    // get our form data out of state
+    const { userId, userCode, firstName, lastName, email, phone, role, password } = this.state;
+    const pwd = document.getElementById("password").value;
+    const rePassword = document.getElementById("re-enter-password").value;
+    const messageElement = document.getElementById('message');
+    // <label class="col-md-12 col-form-label text-center alert alert-danger mt-2 collapse.show" id="message">Saved Successfully!</label>
+    messageElement.classList.remove('collapse.show');
+    messageElement.classList.add('collapse');
+    if(pwd === rePassword) {
+      // axios.post('https://c7kfbjspdb.execute-api.us-east-1.amazonaws.com/dev/users', { userId, userCode, firstName, lastName, email, phone })
+      axios.post('https://enbx9hfr33.execute-api.us-east-2.amazonaws.com/dev/users', { userId, userCode, firstName, lastName, email, phone, role, password })
+        .then((result) => {
+          console.log(result);
+          messageElement.innerText = "Saved Successfully!";
+          messageElement.classList.remove('collapse');
+          messageElement.classList.add('collapse.show');
+        });
+    } else {
+      messageElement.innerText = "Passwords Do NOT match.";
+      messageElement.classList.remove('collapse');
+      messageElement.classList.add('collapse.show');
+    }
   }
+
+
 
   render() {
     return (
@@ -116,4 +152,4 @@ class User extends Component {
   }
 }
 
-export default User;
+export default NewUser;
