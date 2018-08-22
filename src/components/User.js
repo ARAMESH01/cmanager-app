@@ -133,10 +133,10 @@ class User extends Component {
               </div>
               <div className="form-group row">
                 <div className="col-md-12 text-center">
-                  <button type="submit" className="btn btn-outline-primary">Save</button>
-                  <button type="button" className="btn btn-outline-secondary">Change Password</button>
-                  <button type="button" className="btn btn-outline-danger">Delete User</button>
-                  <button type="button" className="btn btn-outline-info">User List</button>
+                  <button type="submit" className="mr-3 btn btn-outline-primary">Save</button>
+                  <button type="button" className="mr-3 btn btn-outline-secondary">Change Password</button>
+                  <button type="button" className="mr-3 btn btn-outline-danger">Delete User</button>
+                  <button type="button" className="mr-3 btn btn-outline-info">User List</button>
                 </div>
               </div>
             </form>

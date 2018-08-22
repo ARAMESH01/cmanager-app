@@ -9,15 +9,5 @@ const App = () => (
     <Routes />
   </div>
 );
-// class App extends Component {
-//   render() {
-//     return (
-//       <div className="App">
-//         <Navigation />
-//         <Routes />
-//       </div>
-//     );
-//   }
-// }
 
 export default App;

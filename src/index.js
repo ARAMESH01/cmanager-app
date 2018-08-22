@@ -19,16 +19,21 @@ const getInitialState = () => {
   })
   .then((result) => {
     console.dir(result);
-    return {users: result.data, currentUser: {}};
+    return {users: result.data}; 
   });
 };
 
 getInitialState().then((initialState) => {
+  console.log('initialState before createStore');
+  console.dir(initialState);
   const store = createStore(
     combineReducers({users, currentUser}),
     initialState,
     window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
   );
+  console.log('initialState after createStore');
+  console.dir(store.getState());
+
 
   ReactDOM.render(
     <Provider store={store}>

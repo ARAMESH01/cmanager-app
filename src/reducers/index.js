@@ -1,18 +1,18 @@
 import { FETCH_DATA, EDIT_USER } from '../actions';
 
-export const users = (state = {users: []}, action) => {
+export const users = (state = [], action) => {
     switch(action.type) {
         case FETCH_DATA:
-            return {users: action.payload};
+            return action.payload;
         default:
             return state;
     }
 };
 
-export const currentUser = (state = {currentUser: {}}, action) => {
+export const currentUser = (state = {}, action) => {
   switch(action.type) {
     case EDIT_USER:
-        return {currentUser: action.payload};
+        return action.payload;
     default:
         return state;
   }

@@ -1,7 +1,5 @@
 import React, { Component } from "react";
 import { connect } from 'react-redux';
-import User from './User';
-import Edit from './Edit';
 import { editUser } from '../actions';
 import { Link } from "react-router-dom";
 
@@ -9,24 +7,24 @@ const mapStateToProps = ({users}) => ({
   users
 });
 
-const mapDispatchToProps = () => {
-  return editUser;
-};
+const mapDispatchToProps = (dispatch) => ({
+  onClick: (user) => dispatch(editUser(user))
+});
 
 class Home extends Component {
-  onUserClick = (user) => {
-    this.props.editUser(user);
-  }
-
+  
   renderUsers() {
-    const users = this.props.users;
+    const {users, onClick } = this.props;
+    console.log('Home Component');
+    console.dir(this.props);
     return users.map((user, index) => {
       return (
-        <tr key={index} class="text-left">
+        <tr key={index} className="text-left">
           <th scope='row'>
-            {/* <Link to="/edit" onClick={this.onUserClick(user)}><i className="fas fa-edit text-danger" ></i></Link> */}
-            <a className="btn" href="/user"><i className="fas fa-eye text-success"></i></a>
-            <a className="btn" href="/edit"><i className="fas fa-edit text-danger" onClick={this.onUserClick(user)}></i></a>
+          <Link to="/view" onClick={() => onClick(user)}><i className="mr-4 fas fa-eye fa-fw text-success"></i></Link>
+            <Link to="/edit" onClick={() => onClick(user)}>
+              <i className="fas fa-edit text-danger" ></i>
+            </Link>
           </th>
           <td>{user.USER_ID}</td>
           <td>{user.USER_CD}</td>
@@ -46,15 +44,17 @@ class Home extends Component {
       <div className="container-fluid" id="main-container">
         <div className="row">
           <div className='col-sm'>
-            <table className="table">
+            <table className="table table-fixed">
               <thead className="bg-dark text-white mt-1">
-                <tr class="text-left">
+                <tr className="text-left">
                   {/* <th scope="col">Action</th> */}
                   {/*
                   <button className="btn fa fa-plus" type="submit"></button> */}
-                  <th scope='col' className='text-nowrap'>Action&nbsp;<a className="btn" href="/User">
-                  {/* <br/> */}
-                  <i className="fas fa-plus-circle fa-fw yellow-font text-warning"></i></a></th>
+                  <th scope='col' className='text-nowrap'>Action&nbsp;
+                    <Link to="/user">
+                      <i className="fas fa-plus-circle fa-fw yellow-font text-warning"></i>
+                    </Link>
+                  </th>
                   <th scope="col">#</th>
                   <th scope="col">Code</th>
                   <th scope="col">First Name</th>
@@ -78,4 +78,4 @@ class Home extends Component {
   }
 };
 
-export default connect(mapStateToProps, {editUser})(Home);
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

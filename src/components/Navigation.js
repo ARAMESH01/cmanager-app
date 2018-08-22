@@ -1,5 +1,5 @@
 import React from 'react';
-import Home from './Home';
+import { Link } from "react-router-dom";
 
 const Navigation = () => (
   <nav className="navbar navbar-expand-md bg-light sticky-top col-md-12">
@@ -15,18 +15,18 @@ const Navigation = () => (
     <div className="collapse navbar-collapse">
       <ul className="navbar-nav mr-auto">
         <li className="nav-item text-center mb-1 mt-1">
-          <a className="nav-link" href="/">
+          <Link to="/" className="nav-link">
             <i className="fa fa-home fa-2x blue-font "></i>
             <br/>
             <i className="nav-text">Home</i>
-          </a>
+          </Link>
         </li>
         <li className="nav-item text-center mb-1 mt-1">
-          <a className="nav-link" href="/">
+          <Link className="nav-link" to="/">
             <i className="fa fa-user fa-2x red-font"></i>
             <br/>
             <i className="nav-text">Users</i>
-          </a>
+          </Link>
         </li>
         <li className="nav-item text-center mb-1 mt-1">
           <a className="nav-link" href="#">
