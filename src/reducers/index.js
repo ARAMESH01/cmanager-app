@@ -1,21 +1,28 @@
-import { FETCH_DATA, EDIT_USER } from '../actions';
+import { FETCH_DATA, EDIT_USER, EDIT_FILTER } from "../actions";
 
 export const users = (state = [], action) => {
-    switch(action.type) {
-        case FETCH_DATA:
-            return action.payload;
-        default:
-            return state;
-    }
+  switch (action.type) {
+    case FETCH_DATA:
+      return action.payload;
+    default:
+      return state;
+  }
 };
 
 export const currentUser = (state = {}, action) => {
-  switch(action.type) {
+  switch (action.type) {
     case EDIT_USER:
-        return action.payload;
+      return action.payload;
     default:
-        return state;
+      return state;
   }
-}
+};
 
-// export default todoApp;
+export const editFilter = (state = "", action) => {
+  switch (action.type) {
+    case EDIT_FILTER:
+      return action.payload;
+    default:
+      return state;
+  }
+};

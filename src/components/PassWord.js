@@ -1,60 +1,13 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import axios from "axios";
 
 const mapStateToProps = ({ currentUser }) => ({
   currentUser
 });
 
-class Edit extends Component {
-  constructor(props) {
-    super(props);
-    let user = props.currentUser;
-    this.state = {
-      userId: user.USER_ID,
-      userCode: user.USER_CD,
-      firstName: user.USER_FIRST_NM,
-      lastName: user.USER_LAST_NM,
-      email: user.USER_EMAIL,
-      phone: user.USER_PHONE,
-      role: user.USER_ROLE,
-      password: user.USER_PW,
-      reEnterPassword: ""
-    };
-  }
-
-  handleInputChange = event => {
-    let tempState = {};
-    tempState[event.target.name] = event.target.value;
-    this.setState(tempState);
-  };
-
-  onSubmit = event => {
-    event.preventDefault();
-    const postPayload = JSON.stringify(this.state);
-    const axiosConfig = {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      crossDomain: true
-    };
-
-    axios
-      .put(
-        "https://enbx9hfr33.execute-api.us-east-2.amazonaws.com/dev/users",
-        postPayload,
-        axiosConfig
-      )
-      .then(function(response) {
-        console.log(response);
-      })
-      .catch(function(error) {
-        console.log(error);
-      });
-  };
-
+class PassWord extends Component {
   render() {
+    const currentUser = this.props.currentUser;
     return (
       <div>
         <div className="row">
@@ -74,15 +27,14 @@ class Edit extends Component {
                 >
                   User Id
                 </label>
-                <div className="col-md-10">
+                <div className="col-md-10 text-left">
                   <input
                     type="text"
                     className="form-control"
                     id="user-id"
                     placeholder="User Id"
                     name="userId"
-                    value={this.state.userId}
-                    onChange={this.handleInputChange}
+                    value={currentUser.USER_ID}
                     disabled
                   />
                 </div>
@@ -94,15 +46,14 @@ class Edit extends Component {
                 >
                   Code
                 </label>
-                <div className="col-md-10">
+                <div className="col-md-10 text-left">
                   <input
                     type="text"
                     className="form-control"
                     id="code"
                     placeholder="Code"
                     name="userCode"
-                    value={this.state.userCode}
-                    onChange={this.handleInputChange}
+                    value={currentUser.USER_CD}
                     disabled
                   />
                 </div>
@@ -114,15 +65,15 @@ class Edit extends Component {
                 >
                   First Name
                 </label>
-                <div className="col-md-10">
+                <div className="col-md-10 text-left">
                   <input
                     type="text"
                     className="form-control"
                     id="first-name"
                     placeholder="First Name"
                     name="firstName"
-                    value={this.state.firstName}
-                    onChange={this.handleInputChange}
+                    value={currentUser.USER_FIRST_NM}
+                    disabled
                   />
                 </div>
               </div>
@@ -133,15 +84,15 @@ class Edit extends Component {
                 >
                   Last Name
                 </label>
-                <div className="col-md-10">
+                <div className="col-md-10 text-left">
                   <input
                     type="text"
                     className="form-control"
                     id="last-name"
                     placeholder="Last Name"
                     name="lastName"
-                    value={this.state.lastName}
-                    onChange={this.handleInputChange}
+                    value={currentUser.USER_LAST_NM}
+                    disabled
                   />
                 </div>
               </div>
@@ -152,15 +103,15 @@ class Edit extends Component {
                 >
                   Email
                 </label>
-                <div className="col-md-10">
+                <div className="col-md-10 text-left">
                   <input
                     type="email"
                     className="form-control"
                     id="email"
                     placeholder="sample@email.com"
                     name="email"
-                    value={this.state.email}
-                    onChange={this.handleInputChange}
+                    value={currentUser.USER_EMAIL}
+                    disabled
                   />
                 </div>
               </div>
@@ -171,15 +122,15 @@ class Edit extends Component {
                 >
                   Phone
                 </label>
-                <div className="col-md-10">
+                <div className="col-md-10 text-left">
                   <input
                     type="text"
                     className="form-control"
                     id="phone"
                     placeholder="000-000-0000"
                     name="phone"
-                    value={this.state.phone}
-                    onChange={this.handleInputChange}
+                    value={currentUser.USER_PHONE}
+                    disabled
                   />
                 </div>
               </div>
@@ -190,19 +141,20 @@ class Edit extends Component {
                 >
                   Role
                 </label>
-                <div className="col-md-10">
-                  <select
+                <div className="col-md-10 text-left">
+                  <input
+                    type="text"
+                    className="form-control"
                     id="role"
                     name="role"
-                    className="form-control"
-                    value={this.state.role}
-                    onChange={this.handleInputChange}
-                  >
-                    <option value="" />
-                    <option value="Admin">Admin</option>
-                    <option value="Manager">Manager</option>
-                    <option value="User">User</option>
-                  </select>
+                    value={currentUser.USER_ROLE}
+                    disabled
+                  />
+                  {/* <select id="role" name="role" className="form-control" value={currentUser.USER_ROLE}>
+                    <option value=""></option>
+                    <option value="admin">Admin</option>
+                    <option value="manager">Manager</option>
+                  </select> */}
                 </div>
               </div>
               <div className="form-group row">
@@ -212,15 +164,13 @@ class Edit extends Component {
                 >
                   Password
                 </label>
-                <div className="col-md-10">
+                <div className="col-md-10 text-left">
                   <input
                     type="password"
                     className="form-control"
                     id="password"
-                    placeholder=""
+                    placeholder="password"
                     name="password"
-                    value={this.state.password}
-                    onChange={this.handleInputChange}
                   />
                 </div>
               </div>
@@ -231,37 +181,29 @@ class Edit extends Component {
                 >
                   Re-enter Password
                 </label>
-                <div className="col-md-10">
+                <div className="col-md-10 text-left">
                   <input
                     type="password"
                     className="form-control"
                     id="re-enter-password"
-                    placeholder=""
+                    placeholder="re-Enter-Password"
                     name="reEnterPassword"
-                    value={this.state.password}
-                    onChange={this.handleInputChange}
                   />
                 </div>
               </div>
               <div className="form-group row">
-                <div className="col-md-12 text-center">
+                <div className="col-md-12 text-left">
                   <button
                     type="submit"
-                    className="mr-3 btn btn-outline-primary"
+                    className="mr-3 btn btn-outline-primary mr-2"
                   >
                     Save
                   </button>
                   <button
                     type="button"
-                    className="mr-3 btn btn-outline-secondary"
+                    className="mr-3 btn btn-outline-secondary mr-2"
                   >
-                    <a href="/PassWord">Change Password</a>
-                  </button>
-                  <button type="button" className="mr-3 btn btn-outline-danger">
-                    Delete User
-                  </button>
-                  <button type="button" className="mr-3 btn btn-outline-info">
-                    User List
+                    Update User
                   </button>
                 </div>
               </div>
@@ -274,4 +216,4 @@ class Edit extends Component {
   }
 }
 
-export default connect(mapStateToProps)(Edit);
+export default connect(mapStateToProps)(PassWord);
