@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const mapStateToProps = ({ currentUser }) => ({
   currentUser
@@ -39,7 +40,9 @@ class Edit extends Component {
       },
       crossDomain: true
     };
-
+    const messageElement = document.getElementById("message");
+    messageElement.classList.remove("collapse.show");
+    messageElement.classList.add("collapse");
     axios
       .put(
         "https://enbx9hfr33.execute-api.us-east-2.amazonaws.com/dev/users",
@@ -48,6 +51,39 @@ class Edit extends Component {
       )
       .then(function(response) {
         console.log(response);
+        messageElement.innerText = "Updated Successfully!";
+        messageElement.classList.remove("collapse");
+        messageElement.classList.add("collapse.show");
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
+  onDelete = event => {
+    console.log("onDelete");
+    console.dir(this.state);
+    const axiosConfig = {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      data: { userId: this.state.userId },
+      crossDomain: true
+    };
+    const messageElement = document.getElementById("message");
+    messageElement.classList.remove("collapse.show");
+    messageElement.classList.add("collapse");
+    axios
+      .delete(
+        "https://enbx9hfr33.execute-api.us-east-2.amazonaws.com/dev/users",
+        axiosConfig
+      )
+      .then(function(response) {
+        console.log(response);
+        messageElement.innerText = "Deleted Successfully!";
+        messageElement.classList.remove("collapse");
+        messageElement.classList.add("collapse.show");
       })
       .catch(function(error) {
         console.log(error);
@@ -221,6 +257,7 @@ class Edit extends Component {
                     name="password"
                     value={this.state.password}
                     onChange={this.handleInputChange}
+                    disabled
                   />
                 </div>
               </div>
@@ -228,6 +265,7 @@ class Edit extends Component {
                 <label
                   htmlFor="re-enter-password"
                   className="col-md-2 col-form-label text-right"
+                  disabled
                 >
                   Re-enter Password
                 </label>
@@ -240,6 +278,7 @@ class Edit extends Component {
                     name="reEnterPassword"
                     value={this.state.password}
                     onChange={this.handleInputChange}
+                    disabled
                   />
                 </div>
               </div>
@@ -255,11 +294,16 @@ class Edit extends Component {
                     type="button"
                     className="mr-3 btn btn-outline-secondary"
                   >
-                    <a href="/PassWord">Change Password</a>
+                    <Link to="/password">Change Password</Link>
                   </button>
-                  <button type="button" className="mr-3 btn btn-outline-danger">
+                  <Link
+                    type="button"
+                    className="mr-3 btn btn-outline-danger"
+                    onClick={this.onDelete}
+                    to="/"
+                  >
                     Delete User
-                  </button>
+                  </Link>
                   <button type="button" className="mr-3 btn btn-outline-info">
                     User List
                   </button>

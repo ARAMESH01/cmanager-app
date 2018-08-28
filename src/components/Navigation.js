@@ -22,18 +22,18 @@ const Navigation = () => (
     <div className="collapse navbar-collapse">
       <ul className="navbar-nav mr-auto">
         <li className="nav-item text-center mb-1 mt-1">
-          <Link to="/" className="nav-link">
+          <a href="/" className="nav-link">
             <i className="fa fa-home fa-2x blue-font " />
             <br />
             <i className="nav-text">Home</i>
-          </Link>
+          </a>
         </li>
         <li className="nav-item text-center mb-1 mt-1">
-          <Link className="nav-link" to="/">
+          <a className="nav-link" href="/">
             <i className="fa fa-user fa-2x red-font" />
             <br />
             <i className="nav-text">Users</i>
-          </Link>
+          </a>
         </li>
         <li className="nav-item text-center mb-1 mt-1">
           <a className="nav-link" href="#">
@@ -79,7 +79,7 @@ const Navigation = () => (
       </div>
       <form className="form-inline my-2 my-lg-0 text-center mb-1 mt-1">
         <a>
-          <img src="girl.png" alt="Avatar" className="avatar" />
+          <img src="peacock-50515_640.jpg" alt="Avatar" className="avatar" />
           <br />
           <i>User Name</i>
         </a>

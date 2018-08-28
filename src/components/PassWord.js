@@ -1,13 +1,74 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import axios from "axios";
 
 const mapStateToProps = ({ currentUser }) => ({
   currentUser
 });
 
 class PassWord extends Component {
+  constructor(props) {
+    super(props);
+    let user = props.currentUser;
+    this.state = {
+      userId: user.USER_ID,
+      userCode: user.USER_CD,
+      firstName: user.USER_FIRST_NM,
+      lastName: user.USER_LAST_NM,
+      email: user.USER_EMAIL,
+      phone: user.USER_PHONE,
+      role: user.USER_ROLE,
+      password: "",
+      reEnterPassword: ""
+    };
+  }
+
+  handleInputChange = event => {
+    let tempState = {};
+    tempState[event.target.name] = event.target.value;
+    this.setState(tempState);
+  };
+
+  onSubmit = event => {
+    event.preventDefault();
+    const pwd = document.getElementById("password").value;
+    const rePassword = document.getElementById("re-enter-password").value;
+    const messageElement = document.getElementById("message");
+    // <label class="col-md-12 col-form-label text-center alert alert-danger mt-2 collapse.show" id="message">Saved Successfully!</label>
+    messageElement.classList.remove("collapse.show");
+    messageElement.classList.add("collapse");
+    const axiosConfig = {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      crossDomain: true
+    };
+    const putPayload = JSON.stringify(this.state);
+    if (pwd === rePassword) {
+      axios
+        .put(
+          "https://enbx9hfr33.execute-api.us-east-2.amazonaws.com/dev/users",
+          putPayload,
+          axiosConfig
+        )
+        .then(result => {
+          console.log(result);
+          messageElement.innerText = "Saved Successfully!";
+          messageElement.classList.remove("collapse");
+          messageElement.classList.add("collapse.show");
+        });
+    } else {
+      messageElement.innerText = "Passwords Do NOT match.";
+      messageElement.classList.remove("collapse");
+      messageElement.classList.add("collapse.show");
+    }
+  };
+
   render() {
-    const currentUser = this.props.currentUser;
+    // const currentUser = this.props.currentUser;
+    console.log("PassWord");
+    console.dir(this.state);
     return (
       <div>
         <div className="row">
@@ -34,7 +95,7 @@ class PassWord extends Component {
                     id="user-id"
                     placeholder="User Id"
                     name="userId"
-                    value={currentUser.USER_ID}
+                    value={this.state.userId}
                     disabled
                   />
                 </div>
@@ -53,7 +114,7 @@ class PassWord extends Component {
                     id="code"
                     placeholder="Code"
                     name="userCode"
-                    value={currentUser.USER_CD}
+                    value={this.state.userCode}
                     disabled
                   />
                 </div>
@@ -72,7 +133,7 @@ class PassWord extends Component {
                     id="first-name"
                     placeholder="First Name"
                     name="firstName"
-                    value={currentUser.USER_FIRST_NM}
+                    value={this.state.firstName}
                     disabled
                   />
                 </div>
@@ -91,7 +152,7 @@ class PassWord extends Component {
                     id="last-name"
                     placeholder="Last Name"
                     name="lastName"
-                    value={currentUser.USER_LAST_NM}
+                    value={this.state.lastName}
                     disabled
                   />
                 </div>
@@ -110,7 +171,7 @@ class PassWord extends Component {
                     id="email"
                     placeholder="sample@email.com"
                     name="email"
-                    value={currentUser.USER_EMAIL}
+                    value={this.state.email}
                     disabled
                   />
                 </div>
@@ -129,7 +190,7 @@ class PassWord extends Component {
                     id="phone"
                     placeholder="000-000-0000"
                     name="phone"
-                    value={currentUser.USER_PHONE}
+                    value={this.state.phone}
                     disabled
                   />
                 </div>
@@ -147,7 +208,7 @@ class PassWord extends Component {
                     className="form-control"
                     id="role"
                     name="role"
-                    value={currentUser.USER_ROLE}
+                    value={this.state.role}
                     disabled
                   />
                   {/* <select id="role" name="role" className="form-control" value={currentUser.USER_ROLE}>
@@ -164,13 +225,15 @@ class PassWord extends Component {
                 >
                   Password
                 </label>
-                <div className="col-md-10 text-left">
+                <div className="col-md-10">
                   <input
                     type="password"
                     className="form-control"
                     id="password"
-                    placeholder="password"
+                    placeholder=""
                     name="password"
+                    value={this.state.password}
+                    onChange={this.handleInputChange}
                   />
                 </div>
               </div>
@@ -181,13 +244,15 @@ class PassWord extends Component {
                 >
                   Re-enter Password
                 </label>
-                <div className="col-md-10 text-left">
+                <div className="col-md-10">
                   <input
                     type="password"
                     className="form-control"
                     id="re-enter-password"
-                    placeholder="re-Enter-Password"
+                    placeholder=""
                     name="reEnterPassword"
+                    value={this.state.reEnterPassword}
+                    onChange={this.handleInputChange}
                   />
                 </div>
               </div>
