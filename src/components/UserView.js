@@ -1,11 +1,95 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 const mapStateToProps = ({ currentUser }) => ({
   currentUser
 });
 
 class UserView extends Component {
+  constructor(props) {
+    super(props);
+    let user = props.currentUser;
+    this.state = {
+      userId: user.USER_ID,
+      userCode: user.USER_CD,
+      firstName: user.USER_FIRST_NM,
+      lastName: user.USER_LAST_NM,
+      email: user.USER_EMAIL,
+      phone: user.USER_PHONE,
+      role: user.USER_ROLE,
+      password: user.USER_PW,
+      reEnterPassword: ""
+    };
+  }
+
+  handleInputChange = event => {
+    let tempState = {};
+    tempState[event.target.name] = event.target.value;
+    this.setState(tempState);
+  };
+
+  onSubmit = event => {
+    event.preventDefault();
+    const postPayload = JSON.stringify(this.state);
+    const axiosConfig = {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      crossDomain: true
+    };
+    const messageElement = document.getElementById("message");
+    messageElement.classList.remove("collapse.show");
+    messageElement.classList.add("collapse");
+    axios
+      .put(
+        "https://enbx9hfr33.execute-api.us-east-2.amazonaws.com/dev/users",
+        postPayload,
+        axiosConfig
+      )
+      .then(function(response) {
+        console.log(response);
+        messageElement.innerText = "Updated Successfully!";
+        messageElement.classList.remove("collapse");
+        messageElement.classList.add("collapse.show");
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
+  onDelete = event => {
+    console.log("onDelete");
+    console.dir(this.state);
+    const axiosConfig = {
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json"
+      },
+      data: { userId: this.state.userId },
+      crossDomain: true
+    };
+    const messageElement = document.getElementById("message");
+    messageElement.classList.remove("collapse.show");
+    messageElement.classList.add("collapse");
+    axios
+      .delete(
+        "https://enbx9hfr33.execute-api.us-east-2.amazonaws.com/dev/users",
+        axiosConfig
+      )
+      .then(function(response) {
+        console.log(response);
+        messageElement.innerText = "Deleted Successfully!";
+        messageElement.classList.remove("collapse");
+        messageElement.classList.add("collapse.show");
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
+
   render() {
     const currentUser = this.props.currentUser;
     return (
@@ -196,26 +280,28 @@ class UserView extends Component {
               <div className="form-group row">
                 <div className="col-md-12 text-left">
                   <button
-                    type="submit"
+                    type="button"
                     className="mr-3 btn btn-outline-primary mr-2"
                   >
-                    Change Password
+                    <Link to="/password">Change Password</Link>
                   </button>
-                  <button
+                  <Link
                     type="button"
-                    className="mr-3 btn btn-outline-secondary mr-2"
-                  >
-                    Update User
-                  </button>
-                  <button
-                    type="button"
-                    className="mr-3 btn btn-outline-danger mr-2"
+                    className="mr-3 btn btn-outline-danger "
+                    onClick={this.onDelete}
+                    to="/"
                   >
                     Delete User
-                  </button>
-                  <button type="button" className="mr-3 btn btn-outline-info">
+                  </Link>
+                  <Link
+                    type="button"
+                    className="mr-3 btn btn-outline-info"
+                    onClick={this.state.user}
+                    to="/"
+                  >
                     User List
-                  </button>
+                    {/* <a href="/user">User List</a> */}
+                  </Link>
                 </div>
               </div>
             </form>

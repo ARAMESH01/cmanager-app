@@ -79,7 +79,11 @@ const Navigation = () => (
       </div>
       <form className="form-inline my-2 my-lg-0 text-center mb-1 mt-1">
         <a>
-          <img src="peacock-50515_640.jpg" alt="Avatar" className="avatar" />
+          <img
+            src="Quadyster-myProfile-pic.jpg"
+            alt="Avatar"
+            className="avatar"
+          />
           <br />
           <i>User Name</i>
         </a>

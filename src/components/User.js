@@ -48,7 +48,39 @@ class User extends Component {
     // <label class="col-md-12 col-form-label text-center alert alert-danger mt-2 collapse.show" id="message">Saved Successfully!</label>
     messageElement.classList.remove("collapse.show");
     messageElement.classList.add("collapse");
-    if (pwd === rePassword) {
+    let messages = [];
+    if (pwd !== rePassword) {
+      messages.push("Passwords Do NOT match.");
+    }
+    if (this.state.userId === null || this.state.userId === "") {
+      messages.push("Please enter UserId.");
+    }
+    if (this.state.userCode === null || this.state.userCode === "") {
+      messages.push("Please enter UserCode.");
+    }
+    if (this.state.userId === null || this.state.userId === "") {
+      messages.push("Please enter firstName.");
+    }
+    if (this.state.userId === null || this.state.userId === "") {
+      messages.push("Please enter lastName.");
+    }
+    if (this.state.userId === null || this.state.userId === "") {
+      messages.push("Please enter email.");
+    }
+    if (this.state.userId === null || this.state.userId === "") {
+      messages.push("Please enter phone.");
+    }
+    if (this.state.userId === null || this.state.userId === "") {
+      messages.push("Please enter role.");
+    }
+    if (this.state.userId === null || this.state.userId === "") {
+      messages.push("Please enter password.");
+    }
+    if (this.state.userId === null || this.state.userId === "") {
+      messages.push("Please enter reEnterPassword.");
+    }
+
+    if (messages === []) {
       // axios.post('https://c7kfbjspdb.execute-api.us-east-1.amazonaws.com/dev/users', { userId, userCode, firstName, lastName, email, phone })
       axios
         .post(
@@ -71,7 +103,11 @@ class User extends Component {
           messageElement.classList.add("collapse.show");
         });
     } else {
-      messageElement.innerText = "Passwords Do NOT match.";
+      let messagesHtml = messages.map(message => {
+        return "<p>" + message + "</p>";
+      });
+      const reducer = (accumulator, currentValue) => accumulator + currentValue;
+      messageElement.innerHTML = messagesHtml.reduce(reducer, "");
       messageElement.classList.remove("collapse");
       messageElement.classList.add("collapse.show");
     }

@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 const mapStateToProps = ({ currentUser }) => ({
   currentUser
@@ -20,7 +20,8 @@ class Edit extends Component {
       phone: user.USER_PHONE,
       role: user.USER_ROLE,
       password: user.USER_PW,
-      reEnterPassword: ""
+      reEnterPassword: "",
+      updated: false
     };
   }
 
@@ -51,6 +52,7 @@ class Edit extends Component {
       )
       .then(function(response) {
         console.log(response);
+        this.setState(() => ({ updated: true }));
         messageElement.innerText = "Updated Successfully!";
         messageElement.classList.remove("collapse");
         messageElement.classList.add("collapse.show");
@@ -91,6 +93,10 @@ class Edit extends Component {
   };
 
   render() {
+    if (this.state.updated === true) {
+      return <Redirect to="/view" />;
+    }
+
     return (
       <div>
         <div className="row">
@@ -284,12 +290,14 @@ class Edit extends Component {
               </div>
               <div className="form-group row">
                 <div className="col-md-12 text-center">
-                  <button
-                    type="submit"
+                  <a
                     className="mr-3 btn btn-outline-primary"
+                    onClick={this.onSubmit}
+                    href="#"
+                    // to="/view"
                   >
                     Save
-                  </button>
+                  </a>
                   <button
                     type="button"
                     className="mr-3 btn btn-outline-secondary"
@@ -304,9 +312,13 @@ class Edit extends Component {
                   >
                     Delete User
                   </Link>
-                  <button type="button" className="mr-3 btn btn-outline-info">
+                  <Link
+                    type="button"
+                    className="mr-3 btn btn-outline-info"
+                    to="/"
+                  >
                     User List
-                  </button>
+                  </Link>
                 </div>
               </div>
             </form>
