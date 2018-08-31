@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
+import Cleave from "cleave.js/react";
+import CleavePhone from "cleave.js/dist/addons/cleave-phone.us";
 
 class User extends Component {
   constructor(props) {
@@ -27,6 +29,10 @@ class User extends Component {
     this.setState({
       [name]: value
     });
+  };
+
+  onPhoneChange = event => {
+    this.setState({ phone: event.target.rawValue });
   };
 
   onSubmit = event => {
@@ -80,7 +86,68 @@ class User extends Component {
       messages.push("Please enter reEnterPassword.");
     }
 
-    if (messages === []) {
+    if (
+      this.state.reEnterPassword === null ||
+      this.state.reEnterPassword === ""
+    ) {
+      messages.push("Please enter firstName.");
+    }
+
+    if (
+      this.state.reEnterPassword === null ||
+      this.state.reEnterPassword === ""
+    ) {
+      messages.push("Please enter lastName.");
+    }
+
+    if (
+      this.state.reEnterPassword === null ||
+      this.state.reEnterPassword === ""
+    ) {
+      messages.push("Please enter email.");
+    }
+
+    if (
+      this.state.reEnterPassword === null ||
+      this.state.reEnterPassword === ""
+    ) {
+      messages.push("Please enter phone.");
+    }
+
+    if (
+      this.state.reEnterPassword === null ||
+      this.state.reEnterPassword === ""
+    ) {
+      messages.push("Please enter role.");
+    }
+
+    if (
+      this.state.reEnterPassword === null ||
+      this.state.reEnterPassword === ""
+    ) {
+      messages.push("Please enter password.");
+    }
+
+    if (
+      this.state.reEnterPassword === null ||
+      this.state.reEnterPassword === ""
+    ) {
+      messages.push("Please enter reEnterPassword.");
+    }
+
+    console.log("messages: " + messages);
+    console.dir(messages);
+    if (messages === [] || messages.length === 0) {
+      const axiosConfig = {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json"
+        },
+        data: { userId: this.state.userId },
+        crossDomain: true
+      };
+      console.log("before axios");
+
       // axios.post('https://c7kfbjspdb.execute-api.us-east-1.amazonaws.com/dev/users', { userId, userCode, firstName, lastName, email, phone })
       axios
         .post(
@@ -94,7 +161,8 @@ class User extends Component {
             phone,
             role,
             password
-          }
+          },
+          axiosConfig
         )
         .then(result => {
           console.log(result);
@@ -224,12 +292,13 @@ class User extends Component {
               <div className="form-group row">
                 <label
                   htmlFor="phone"
-                  className="col-md-2 col-form-label text-right"
+                  className="col-md-2 col-form-label text-right input-medium bfh-phone"
+                  data-format="(ddd) ddd-dddd"
                 >
                   Phone
                 </label>
                 <div className="col-md-10">
-                  <input
+                  {/* <input
                     type="text"
                     className="form-control"
                     id="phone"
@@ -237,6 +306,14 @@ class User extends Component {
                     name="phone"
                     value={this.state.phone}
                     onChange={this.handleInputChange}
+                  /> */}
+                  <Cleave
+                    placeholder="xxx xxx xxxx"
+                    className="form-control"
+                    id="phone"
+                    name="phone"
+                    options={{ phone: true, phoneRegionCode: "US" }}
+                    onChange={this.onPhoneChange}
                   />
                 </div>
               </div>

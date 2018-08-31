@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
 import { Link, Redirect } from "react-router-dom";
+import Cleave from "cleave.js/react";
+import CleavePhone from "cleave.js/dist/addons/cleave-phone.us";
 
 const mapStateToProps = ({ currentUser }) => ({
   currentUser
@@ -50,7 +52,7 @@ class Edit extends Component {
         postPayload,
         axiosConfig
       )
-      .then(function(response) {
+      .then(response => {
         console.log(response);
         this.setState(() => ({ updated: true }));
         messageElement.innerText = "Updated Successfully!";
@@ -214,7 +216,7 @@ class Edit extends Component {
                   Phone
                 </label>
                 <div className="col-md-10">
-                  <input
+                  {/* <input
                     type="text"
                     className="form-control"
                     id="phone"
@@ -222,6 +224,14 @@ class Edit extends Component {
                     name="phone"
                     value={this.state.phone}
                     onChange={this.handleInputChange}
+                  /> */}
+                  <Cleave
+                    placeholder="xxx xxx xxxx"
+                    className="form-control"
+                    id="phone"
+                    name="phone"
+                    options={{ phone: true, phoneRegionCode: "US" }}
+                    onChange={this.onPhoneChange}
                   />
                 </div>
               </div>
@@ -293,7 +303,7 @@ class Edit extends Component {
                   <a
                     className="mr-3 btn btn-outline-primary"
                     onClick={this.onSubmit}
-                    href="#"
+                    href="/view"
                     // to="/view"
                   >
                     Save

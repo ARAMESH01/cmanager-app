@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const mapStateToProps = ({ currentUser }) => ({
   currentUser
@@ -264,12 +265,13 @@ class PassWord extends Component {
                   >
                     Save
                   </button>
-                  <button
+                  <Link
                     type="button"
                     className="mr-3 btn btn-outline-secondary mr-2"
+                    to="/edit"
                   >
                     Update User
-                  </button>
+                  </Link>
                 </div>
               </div>
             </form>
