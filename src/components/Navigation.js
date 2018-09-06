@@ -5,7 +5,11 @@ const Navigation = () => (
   <nav className="navbar navbar-expand-md bg-light sticky-top col-md-12">
     <a className="navbar-brand" href="http://localhost:3000">
       <i>
-        <img src="quadyster-logo.png" alt="image" className="quadyster-logo" />
+        <img
+          src="quadyster-logo.png"
+          alt="Quadyster Logo"
+          className="quadyster-logo"
+        />
       </i>
     </a>
     <button

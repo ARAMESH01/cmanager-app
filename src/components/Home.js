@@ -3,27 +3,31 @@ import { connect } from "react-redux";
 import { editUser } from "../actions";
 import { Link } from "react-router-dom";
 
-const mapStateToProps = ({ users }) => ({
-  users
+const mapStateToProps = state => ({
+  users: state.users
 });
 
 const mapDispatchToProps = dispatch => ({
-  onClick: user => dispatch(editUser(user))
+  onClick: (user, isEdit, editCredentials) => {
+    dispatch(editUser(user));
+    dispatch({ type: "user_edit", payload: isEdit });
+    dispatch({ type: "credentials_edit", payload: editCredentials });
+  }
 });
 
 class Home extends Component {
   renderUsers() {
     const { users, onClick } = this.props;
-    console.log("Home Component");
+    console.log("home Component");
     console.dir(this.props);
     return users.map((user, index) => {
       return (
         <tr key={index} className="text-left">
           <th scope="row">
-            <Link to="/view" onClick={() => onClick(user)}>
+            <Link to="/user" onClick={() => onClick(user, false, false)}>
               <i className="mr-4 fas fa-eye fa-fw text-success" />
             </Link>
-            <Link to="/edit" onClick={() => onClick(user)}>
+            <Link to="/user" onClick={() => onClick(user, true, false)}>
               <i className="fas fa-edit text-danger" />
             </Link>
           </th>
@@ -44,6 +48,16 @@ class Home extends Component {
   }
 
   render() {
+    const newUser = {
+      USER_ID: "",
+      USER_CD: "",
+      USER_FIRST_NM: "",
+      USER_LAST_NM: "",
+      USER_EMAIL: "",
+      USER_PHONE: "",
+      USER_ROLE: "",
+      USER_PW: ""
+    };
     return (
       <div className="container-fluid" id="main-container">
         <div className="row">
@@ -53,10 +67,13 @@ class Home extends Component {
                 <tr className="text-left">
                   {/* <th scope="col">Action</th> */}
                   {/*
-                  <button className="btn fa fa-plus" type="submit"></button> */}
+                <button className="btn fa fa-plus" type="submit"></button> */}
                   <th scope="col" className="text-nowrap">
                     Action&nbsp;
-                    <Link to="/user">
+                    <Link
+                      to="/user"
+                      onClick={() => this.props.onClick(newUser, true, true)}
+                    >
                       <i className="fas fa-plus-circle fa-fw yellow-font text-warning" />
                     </Link>
                   </th>
