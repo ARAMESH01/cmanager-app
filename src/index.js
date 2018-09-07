@@ -7,21 +7,23 @@ import axios from "axios";
 import { Provider } from "react-redux";
 import { combineReducers, createStore } from "redux";
 import { users, currentUser, isEdit, editCredentials, id } from "./reducers";
+import { getInitialState } from "./services/user-api";
 
-const getInitialState = () => {
-  return axios
-    .get("https://enbx9hfr33.execute-api.us-east-2.amazonaws.com/dev/users", {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      crossDomain: true
-    })
-    .then(result => {
-      console.dir(result);
-      return { users: result.data };
-    });
-};
+// const getInitialState = () => {
+//   return axios
+//     .get("https://enbx9hfr33.execute-api.us-east-2.amazonaws.com/dev/users", {
+//       headers: {
+//         Accept: "application/json",
+//         "Content-Type": "application/json"
+//       },
+//       crossDomain: true
+//     })
+//     .then(result => {
+//       console.dir(result);
+//       return { users: result.data };
+//     });
+// };
+
 // const getInitialState = () => {
 //   return Promise.resolve({
 //     users: [

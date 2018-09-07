@@ -6,6 +6,8 @@ import User from "./components/User";
 export default () => (
   <Switch>
     <Route path="/" exact component={Home} />
+    {/* <Route path="/{`match.path/user`}" exact component={User} /> */}
     <Route path="/user" exact component={User} />
+    <Route path="/user/:userIdParam" exact component={User} />
   </Switch>
 );

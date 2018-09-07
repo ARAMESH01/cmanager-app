@@ -3,8 +3,10 @@ import { connect } from "react-redux";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { editUser } from "../actions";
+import { put, post, getInitialState } from "../services/user-api";
 import Cleave from "cleave.js/react";
 import CleavePhone from "cleave.js/dist/addons/cleave-phone.us";
+import queryString from "query-string";
 
 const mapStateToProps = ({ currentUser, isEdit, editCredentials }) => ({
   currentUser,
@@ -40,6 +42,41 @@ class User extends Component {
     };
   }
 
+  componentDidMount() {
+    let { userIdParam } = this.props.match.params;
+    userIdParam = parseInt(userIdParam);
+    console.log(`componentDidMount userId: ${userIdParam}`);
+    console.dir(this.state);
+    const urlParams = queryString.parse(this.props.location.search);
+    console.log("urlParams:");
+    console.dir(urlParams);
+    if (!this.state.userCode && userIdParam) {
+      console.log("Empty State");
+      getInitialState().then(initialState => {
+        console.log("initialState");
+        console.dir(initialState);
+        const { users } = initialState;
+        console.log("users");
+        console.dir(users);
+        console.log(`userIdParam: ${userIdParam}`);
+        let currentUser = users.find(u => u.USER_ID === userIdParam);
+        console.dir(currentUser);
+        this.setState({
+          userId: currentUser.USER_ID,
+          userCode: currentUser.USER_CD,
+          firstName: currentUser.USER_FIRST_NM,
+          lastName: currentUser.USER_LAST_NM,
+          email: currentUser.USER_EMAIL,
+          phone: currentUser.USER_PHONE,
+          role: currentUser.USER_ROLE,
+          password: currentUser.USER_PW,
+          reEnterPassword: currentUser.USER_PW
+        });
+        console.dir(this.state);
+      });
+    }
+  }
+
   onChangePassword = () => {
     this.props.onPasswordChange(true);
     this.props.onSaveEdit(false);
@@ -60,6 +97,39 @@ class User extends Component {
     else return false;
   };
 
+  isFormValid = () =>
+    !(
+      this.state.userCode === null ||
+      this.state.userCode === "" ||
+      this.state.firstName === null ||
+      this.state.firstName === "" ||
+      this.state.lastName === null ||
+      this.state.lastName === "" ||
+      this.state.email === null ||
+      this.state.email === "" ||
+      this.state.phone === null ||
+      this.state.phone === "" ||
+      this.state.role === null ||
+      this.state.role === "" ||
+      this.state.password === null ||
+      this.state.password === ""
+    );
+
+  addFormMessage = message => {
+    if (message) {
+      const messageElement = document.getElementById("message");
+      messageElement.innerHTML = `<span>${message}</span>`;
+      messageElement.classList.remove("collapse");
+      messageElement.classList.add("collapse.show");
+    }
+  };
+
+  clearFormMessage = () => {
+    const messageElement = document.getElementById("message");
+    messageElement.classList.remove("collapse.show");
+    messageElement.classList.add("collapse");
+  };
+
   onSave = event => {
     if (this.isNewUser()) {
       console.log("creating new user");
@@ -72,23 +142,9 @@ class User extends Component {
 
   onUserUpdate = event => {
     event.preventDefault();
-    const postPayload = JSON.stringify(this.state);
-    const axiosConfig = {
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json"
-      },
-      crossDomain: true
-    };
-    axios
-      .put(
-        "https://enbx9hfr33.execute-api.us-east-2.amazonaws.com/dev/users",
-        postPayload,
-        axiosConfig
-      )
+    put(this.state)
       .then(response => {
         console.log(response);
-        // this.setState(() => ({ updated: true }));
         this.props.onSaveEdit(false);
         this.props.onPasswordChange(false);
       })
@@ -99,112 +155,32 @@ class User extends Component {
 
   onNewUserSave = event => {
     event.preventDefault();
-    // get our form data out of state
-    const {
-      userId,
-      userCode,
-      firstName,
-      lastName,
-      email,
-      phone,
-      role,
-      password
-    } = this.state;
+    this.clearFormMessage();
     const pwd = document.getElementById("password").value;
     const rePassword = document.getElementById("re-enter-password").value;
-    const messageElement = document.getElementById("message");
     const formElement = document.getElementById("user-form");
-    // <label class="col-md-12 col-form-label text-center alert alert-danger mt-2 collapse.show" id="message">Saved Successfully!</label>
-    messageElement.classList.remove("collapse.show");
-    messageElement.classList.add("collapse");
-    let messages = [];
-    if (pwd !== rePassword) {
-      messages.push("Passwords Do NOT match.");
-    }
-    // if (this.state.userId === null || this.state.userId === "") {
-    //   messages.push("Please enter UserId.");
-    // }
-    if (this.state.userCode === null || this.state.userCode === "") {
-      messages.push("Please enter UserCode.");
-    }
-    if (this.state.firstName === null || this.state.firstName === "") {
-      messages.push("Please enter firstName.");
-    }
-    if (this.state.lastName === null || this.state.lastName === "") {
-      messages.push("Please enter lastName.");
-    }
-    if (this.state.email === null || this.state.email === "") {
-      messages.push("Please enter email.");
-    }
-    if (this.state.phone === null || this.state.phone === "") {
-      messages.push("Please enter phone.");
-    }
-    if (this.state.role === null || this.state.role === "") {
-      messages.push("Please enter role.");
-    }
-    if (this.state.password === null || this.state.password === "") {
-      messages.push("Please enter password.");
-    }
-    if (
-      this.state.reEnterPassword === null ||
-      this.state.reEnterPassword === ""
-    ) {
-      messages.push("Please enter reEnterPassword.");
-    }
+    let message = pwd === rePassword ? null : "Passwords Do NOT match.";
 
-    console.log("messages: " + messages);
-    console.dir(messages);
-    if (messages === [] || messages.length === 0) {
-      const axiosConfig = {
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json"
-        },
-        data: { userId: this.state.userId },
-        crossDomain: true
-      };
-      axios
-        .post(
-          "https://enbx9hfr33.execute-api.us-east-2.amazonaws.com/dev/users",
-          {
-            // userId,
-            userCode,
-            firstName,
-            lastName,
-            email,
-            phone,
-            role,
-            password
-          },
-          axiosConfig
-        )
-        .then(result => {
-          console.log(result);
-          this.setState({ userId: result.data.userId });
-          messageElement.innerText = "Saved Successfully!";
-          messageElement.classList.remove("collapse");
-          messageElement.classList.add("collapse.show");
-          const newUser = {
-            USER_ID: result.data.userId,
-            USER_CD: this.state.userCode,
-            USER_FIRST_NM: this.state.firstName,
-            USER_LAST_NM: this.state.lastName,
-            USER_EMAIL: this.state.email,
-            USER_PHONE: this.state.phone,
-            USER_ROLE: this.state.role,
-            USER_PW: this.state.password
-          };
-          this.props.onNewUserSave(newUser, false, false);
-        });
+    if (this.isFormValid()) {
+      post(this.state).then(result => {
+        console.log(result);
+        this.setState({ userId: result.userId });
+        this.addFormMessage("Saved Successfully!");
+        const newUser = {
+          USER_ID: result.userId,
+          USER_CD: this.state.userCode,
+          USER_FIRST_NM: this.state.firstName,
+          USER_LAST_NM: this.state.lastName,
+          USER_EMAIL: this.state.email,
+          USER_PHONE: this.state.phone,
+          USER_ROLE: this.state.role,
+          USER_PW: this.state.password
+        };
+        this.props.onNewUserSave(newUser, false, false);
+      });
     } else {
       formElement.classList.add("was-validated");
-      // let messagesHtml = messages.map(message => {
-      //   return "<p>" + message + "</p>";
-      // });
-      // const reducer = (accumulator, currentValue) => accumulator + currentValue;
-      // messageElement.innerHTML = messagesHtml.reduce(reducer, "");
-      // messageElement.classList.remove("collapse");
-      // messageElement.classList.add("collapse.show");
+      this.addFormMessage(message);
     }
   };
 
@@ -249,7 +225,7 @@ class User extends Component {
               id="user-form"
               onSubmit={this.onSubmit}
               className="needs-validation"
-              novalidate
+              noValidate
             >
               <div className="form-group row">
                 <label
@@ -266,7 +242,7 @@ class User extends Component {
                 </label>
                 <div className="col-md-10">
                   <input
-                    disabled={!this.isNewUser()}
+                    disabled
                     type="text"
                     className="form-control"
                     id="user-id"
@@ -296,7 +272,9 @@ class User extends Component {
                     onChange={this.handleInputChange}
                     required
                   />
-                  <div class="invalid-feedback">Please provide User Code.</div>
+                  <div className="invalid-feedback">
+                    Please provide User Code.
+                  </div>
                 </div>
               </div>
               <div className="form-group row">
@@ -318,7 +296,9 @@ class User extends Component {
                     onChange={this.handleInputChange}
                     required
                   />
-                  <div class="invalid-feedback">Please provide First Name.</div>
+                  <div className="invalid-feedback">
+                    Please provide First Name.
+                  </div>
                 </div>
               </div>
               <div className="form-group row">
@@ -340,7 +320,9 @@ class User extends Component {
                     onChange={this.handleInputChange}
                     required
                   />
-                  <div class="invalid-feedback">Please provide Last Name.</div>
+                  <div className="invalid-feedback">
+                    Please provide Last Name.
+                  </div>
                 </div>
               </div>
               <div className="form-group row">
@@ -362,7 +344,7 @@ class User extends Component {
                     onChange={this.handleInputChange}
                     required
                   />
-                  <div class="invalid-feedback">Please provide Email.</div>
+                  <div className="invalid-feedback">Please provide Email.</div>
                 </div>
               </div>
               <div className="form-group row">
@@ -384,7 +366,7 @@ class User extends Component {
                     onChange={this.onPhoneChange}
                     required
                   />
-                  <div class="invalid-feedback">
+                  <div className="invalid-feedback">
                     Please provide Phone Number.
                   </div>
                 </div>
@@ -411,7 +393,7 @@ class User extends Component {
                     <option value="Manager">Manager</option>
                     <option value="User">User</option>
                   </select>
-                  <div class="invalid-feedback">Please select role.</div>
+                  <div className="invalid-feedback">Please select role.</div>
                 </div>
               </div>
               <div className="form-group row">
@@ -434,7 +416,9 @@ class User extends Component {
                     required
                     // disabled
                   />
-                  <div class="invalid-feedback">Please provide Password.</div>
+                  <div className="invalid-feedback">
+                    Please provide Password.
+                  </div>
                 </div>
               </div>
               <div className="form-group row">
@@ -458,7 +442,9 @@ class User extends Component {
                     required
                     // disabled
                   />
-                  <div class="invalid-feedback">Please re-enter password.</div>
+                  <div className="invalid-feedback">
+                    Please re-enter password.
+                  </div>
                 </div>
               </div>
               <div className="form-group row">

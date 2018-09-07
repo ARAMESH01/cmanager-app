@@ -24,10 +24,16 @@ class Home extends Component {
       return (
         <tr key={index} className="text-left">
           <th scope="row">
-            <Link to="/user" onClick={() => onClick(user, false, false)}>
+            <Link
+              to={`/user/${user.USER_ID}`}
+              onClick={() => onClick(user, false, false)}
+            >
               <i className="mr-4 fas fa-eye fa-fw text-success" />
             </Link>
-            <Link to="/user" onClick={() => onClick(user, true, false)}>
+            <Link
+              to={`/user/${user.USER_ID}`}
+              onClick={() => onClick(user, true, false)}
+            >
               <i className="fas fa-edit text-danger" />
             </Link>
           </th>
